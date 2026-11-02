@@ -62,7 +62,7 @@ class VideoTo3DProcessor:
         fps_map = {"fast": 2, "balanced": 3, "ultra": 5}
         target_fps = fps_map.get(quality, 3)
 
-        frame_pattern = os.path.join(frames_dir, "frame_%04d.png")
+        frame_pattern = os.path.join(frames_dir, "frame_%04d.jpg")
         cmd_extract = [
             self.ffmpeg_bin, "-y",
             "-i", video_path,
@@ -72,7 +72,7 @@ class VideoTo3DProcessor:
         ]
         run_cmd(cmd_extract, lambda m: self.log(m, 18, "Extracting Frames"))
 
-        all_frames = sorted(glob.glob(os.path.join(frames_dir, "frame_*.png")))
+        all_frames = sorted(glob.glob(os.path.join(frames_dir, "frame_*.[jp][pn]g")))
         num_frames = len(all_frames)
         if num_frames == 0:
             raise RuntimeError("No frames were extracted from the video.")
