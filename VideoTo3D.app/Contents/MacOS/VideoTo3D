@@ -1,0 +1,10 @@
+#!/bin/bash
+APP_DIR="/Users/mohamadjlo/Desktop/VideoTo3D"
+cd "$APP_DIR"
+
+if ! lsof -i :5050 > /dev/null 2>&1; then
+    nohup /Users/mohamadjlo/Desktop/.3dgs_toolchain/venv_3dgs/bin/python server.py 5050 > server.log 2>&1 &
+    sleep 1.5
+fi
+
+open "http://127.0.0.1:5050"

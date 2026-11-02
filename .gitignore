@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+.DS_Store
+*.swp
+server.log
+uploads/
+outputs/
+VideoTo3D_Outputs/
+.venv/
+venv/
