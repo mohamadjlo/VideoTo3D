@@ -116,7 +116,10 @@ class VideoTo3DProcessor:
     def build_solid_textured_mesh(self, frames, export_dir, quality):
         import torch
         from transformers import pipeline
-        import trimesh
+        try:
+            import trimesh
+        except ImportError:
+            trimesh = None
 
         num_keyframes = 8 if quality == "fast" else (12 if quality == "balanced" else 18)
         num_frames = len(frames)
@@ -272,19 +275,22 @@ class VideoTo3DProcessor:
 
         # Export GLB (Single binary file containing geometry + textures for instant WebGL & Unity)
         glb_path = os.path.join(export_dir, "solid_3d_world.glb")
-        try:
-            material = trimesh.visual.material.PBRMaterial(
-                name="WorldTexture",
-                baseColorTexture=atlas,
-                roughnessFactor=0.8,
-                metallicFactor=0.1
-            )
-            visual = trimesh.visual.TextureVisuals(uv=uvs_all, material=material)
-            mesh = trimesh.Trimesh(vertices=verts_all, faces=faces_all, visual=visual, process=False)
-            mesh.export(glb_path, file_type="glb")
-            self.log(f"Exported glTF Binary GLB: {glb_path}", 85, "Exporting Formats")
-        except Exception as e:
-            self.log(f"GLB export note: {e}", 85, "Exporting Formats")
+        if trimesh is not None:
+            try:
+                material = trimesh.visual.material.PBRMaterial(
+                    name="WorldTexture",
+                    baseColorTexture=atlas,
+                    roughnessFactor=0.8,
+                    metallicFactor=0.1
+                )
+                visual = trimesh.visual.TextureVisuals(uv=uvs_all, material=material)
+                mesh = trimesh.Trimesh(vertices=verts_all, faces=faces_all, visual=visual, process=False)
+                mesh.export(glb_path, file_type="glb")
+                self.log(f"Exported glTF Binary GLB: {glb_path}", 85, "Exporting Formats")
+            except Exception as e:
+                self.log(f"GLB export note: {e}", 85, "Exporting Formats")
+        else:
+            self.log("Trimesh not available; skipping GLB packaging. OBJ + MTL ready.", 85, "Exporting Formats")
 
         return {
             "obj": obj_path,
