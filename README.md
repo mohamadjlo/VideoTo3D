@@ -54,7 +54,7 @@ VideoTo3D/
 ### Option 2: Command Line
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/VideoTo3D.git
+git clone https://github.com/mohamadjlo/VideoTo3D.git
 cd VideoTo3D
 
 # Install dependencies
